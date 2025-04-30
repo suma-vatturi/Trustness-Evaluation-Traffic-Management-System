@@ -4,14 +4,31 @@
 **Group 24:** Suma Vatturi (U44064470), RamaKrishna Reddy Vennam (U85778186)  
 **Project Repository:** https://github.com/suma-vatturi/Trustness-Evaluation-Traffic-Management-System  
 
+**Project Notebooks:**
+- [01_training_notebook_v8.ipynb](https://github.com/suma-vatturi/Trustness-Evaluation-Traffic-Management-System/blob/main/notebooks/01_training_notebook_v8.ipynb)
+- [02_robustness_evaluation.ipynb](https://github.com/suma-vatturi/Trustness-Evaluation-Traffic-Management-System/blob/main/notebooks/02_robustness_evaluation.ipynb)
+- [03_fairness_evaluation.ipynb](https://github.com/suma-vatturi/Trustness-Evaluation-Traffic-Management-System/blob/main/notebooks/03_fairness_evaluation.ipynb)
+
+**Project Demo:**
+
+[![Project Demo Video](https://img.youtube.com/vi/gQNsI5qtbt4/0.jpg)](https://www.youtube.com/watch?v=gQNsI5qtbt4)
+
 ## Table of Contents
 - [Trustworthiness Evaluation: AI-Powered Traffic Management System](#trustworthiness-evaluation-ai-powered-traffic-management-system)
   - [Table of Contents](#table-of-contents)
-  - [1. Introduction](#1-introduction)
-  - [2. Running Evaluation Notebooks Locally](#2-running-evaluation-notebooks-locally)
-    - [2.1. Environment Setup](#21-environment-setup)
-    - [2.2. Dataset Preparation](#22-dataset-preparation)
-    - [2.3. Running the Notebooks](#23-running-the-notebooks)
+  - [1. Technical Implementation \& Setup](#1-technical-implementation--setup)
+    - [1.1 Repository Structure](#11-repository-structure)
+    - [1.2 Requirements \& Dependencies](#12-requirements--dependencies)
+    - [1.3 Environment Setup](#13-environment-setup)
+    - [1.4 Dataset Preparation](#14-dataset-preparation)
+    - [1.5 Running the Notebooks](#15-running-the-notebooks)
+    - [1.6 Execution Steps](#16-execution-steps)
+      - [1.6.1 Data Preparation](#161-data-preparation)
+      - [1.6.2 Model Training](#162-model-training)
+      - [1.6.3 Robustness Evaluation](#163-robustness-evaluation)
+      - [1.6.4 Fairness Evaluation](#164-fairness-evaluation)
+    - [1.7 Reproducibility Notes](#17-reproducibility-notes)
+  - [2. Introduction](#2-introduction)
   - [3. Trustworthiness Principles \& Evaluation Strategy](#3-trustworthiness-principles--evaluation-strategy)
     - [3.1 Reliability \& Robustness Evaluation](#31-reliability--robustness-evaluation)
       - [3.1.1 Perturbation Types](#311-perturbation-types)
@@ -39,48 +56,85 @@
       - [5.2.1 Performance Hierarchy Analysis](#521-performance-hierarchy-analysis)
       - [5.2.2 Equity Gap Analysis](#522-equity-gap-analysis)
       - [5.2.3 Confusion Matrix Insights](#523-confusion-matrix-insights)
-  - [6. Technical Implementation \& Usage](#6-technical-implementation--usage)
-    - [6.1 Requirements \& Dependencies](#61-requirements--dependencies)
-    - [6.2 Repository Structure](#62-repository-structure)
-    - [6.3 Execution Steps](#63-execution-steps)
-      - [6.3.1 Data Preparation](#631-data-preparation)
-      - [6.3.2 Model Training](#632-model-training)
-      - [6.3.3 Robustness Evaluation](#633-robustness-evaluation)
-      - [6.3.4 Fairness Evaluation](#634-fairness-evaluation)
-    - [6.4 Reproducibility Notes](#64-reproducibility-notes)
-  - [7. Conclusion](#7-conclusion)
-    - [7.1 Summary of Findings](#71-summary-of-findings)
-    - [7.2 Deployment Considerations](#72-deployment-considerations)
-  - [8. Acknowledgments \& References](#8-acknowledgments--references)
+  - [6. Conclusion](#6-conclusion)
+    - [6.1 Summary of Findings](#61-summary-of-findings)
+    - [6.2 Deployment Considerations](#62-deployment-considerations)
+  - [7. Acknowledgments \& References](#7-acknowledgments--references)
     - [8.1 External Code \& Libraries](#81-external-code--libraries)
     - [8.2 Datasets](#82-datasets)
     - [8.3 References](#83-references)
 
-## 1. Introduction
+## 1. Technical Implementation & Setup
 
-Modern intelligent transportation systems increasingly rely on AI for real-time traffic management. While these systems promise improved efficiency, their deployment in safety-critical infrastructure demands rigorous trustworthiness evaluation. Our project evaluates an AI-driven traffic signal system that detects vehicles and adapts signal timings in real-time, focusing on two crucial trustworthiness principles:
+### 1.1 Repository Structure
 
-> **Reliability & Robustness:** How well does our system maintain detection performance when confronted with real-world perturbations like adverse weather, lighting changes, or motion blur?
+```
+Trustness-Evaluation-Traffic-Management-System/
+├── datasets/                      # Dataset directory
+│   └── Street-View-1/             # Our traffic dataset
+│       ├── train/                 # Training images & labels
+│       ├── valid/                 # Validation images & labels
+│       ├── test/                  # Test images & labels
+│       └── data.yaml              # Dataset configuration
+│
+├── notebooks/                     # Jupyter notebooks
+│   ├── 01_training_notebook_v8.ipynb     # Model training
+│   ├── 02_robustness_evaluation.ipynb    # Robustness testing
+│   └── 03_fairness_evaluation.ipynb      # Fairness analysis
+│
+├── results/                       # Evaluation outputs
+│   ├── robustness_results/        # Robustness test results
+│   │   ├── detection_count.png
+│   │   └── metrics.png
+│   ├── training_results/          # Model training results
+│   │   └── results.csv            # Training metrics and logs
+│   │   └── Images, etc            # Contains other validation images
+│   └── trustness_results/         # Fairness analysis results
+│       ├── metrics.png
+│       └── confusion_matrix.png
+│
+├── runs/                          # Training results
+│   └── detect/
+│       └── train/                 # Training outputs
+│           ├── weights/           # Trained model weights
+│           │   ├── best.pt        # Best model weights
+│           │   └── last.pt        # Last epoch weights
+│           ├── results.png        # Training metrics plot
+│           └── val_batch0_pred.jpg  # Validation batch
+│
+├── webapp/                        # Web application for demonstration
+│   ├── flask/                     # Flask web app
+│   ├── streamlit/                 # Streamlit web app
+│   ├── model_weights              # Flask application main script
+│   └── requirements.txt           # Python requirements to run a live app
+│
+├── README.md                      # This documentation
+└── requirements.txt               # Dependencies
+```
 
-> **Fairness & Bias:** Does our system detect all types of road users equally well, or does it favor certain vehicle types at the expense of others (particularly vulnerable road users)?
+### 1.2 Requirements & Dependencies
 
-These principles are essential because:
-1. Traffic systems must operate 24/7 in unpredictable conditions
-2. Equitable treatment of all road users is a fundamental safety and ethical requirement
-3. Biased or unstable systems could lead to unfair traffic signal timing or even safety incidents
+To run the evaluation code, the following dependencies are required:
 
-For this evaluation, we utilize YOLOv8s rather than YOLOv9 (used in our midterm) because:
-- It integrates more seamlessly with established evaluation libraries
-- It provides consistent, reproducible results across environments
-- While slightly less accurate than YOLOv9, its performance characteristics are better documented
+```
+ultralytics==8.2.103
+opencv-python>=4.6.0
+numpy==1.23.5
+matplotlib>=3.5.0
+pandas>=1.3.5
+seaborn>=0.12.0
+tqdm>=4.64.0
+torch>=1.13.0
+torchvision>=0.14.0
+roboflow==1.1.48
+```
 
-We also used a cleaner dataset of 3,649 unaugmented Street-View images (versus the 8,693 augmented images in our midterm) to obtain more realistic assessments of the system's true capabilities without artificial enhancement from data augmentation.
+These can be installed using:
+```bash
+pip install -r requirements.txt
+```
 
-## 2. Running Evaluation Notebooks Locally
-
-This section explains how to run our evaluation notebooks on your local machine.
-
-### 2.1. Environment Setup
+### 1.3 Environment Setup
 
 1. **Clone the repository**
    ```bash
@@ -107,7 +161,7 @@ This section explains how to run our evaluation notebooks on your local machine.
    pip install -r requirements.txt
    ```
 
-### 2.2. Dataset Preparation
+### 1.4 Dataset Preparation
 
 1. **Download the Street-View dataset**
    
@@ -141,7 +195,7 @@ This section explains how to run our evaluation notebooks on your local machine.
    └── data.yaml
    ```
 
-### 2.3. Running the Notebooks
+### 1.5 Running the Notebooks
 
 1. **Start Jupyter**
    ```bash
@@ -162,6 +216,90 @@ This section explains how to run our evaluation notebooks on your local machine.
    - Evaluation metrics and plots will be displayed in the notebooks
    - Saved results will be in the `results/` directory
    - Model weights will be saved to `runs/detect/train/weights/best.pt`
+
+### 1.6 Execution Steps
+
+#### 1.6.1 Data Preparation
+1. Download the Street-View dataset:
+   ```python
+   from roboflow import Roboflow
+   rf = Roboflow(api_key="LgoDzohA8qu7hiyPxZtg")
+   project = rf.workspace("sumavatturi").project("street-view-gdogo-a7du4")
+   version = project.version(1)
+   dataset = version.download("yolov9")
+   ```
+
+2. Verify dataset structure:
+   ```
+   datasets/Street-View-1/
+   ├── train/
+   │   ├── images/
+   │   └── labels/
+   ├── valid/
+   │   ├── images/
+   │   └── labels/
+   ├── test/
+   │   ├── images/
+   │   └── labels/
+   └── data.yaml
+   ```
+
+#### 1.6.2 Model Training
+1. Run the training notebook:
+   ```bash
+   jupyter notebook notebooks/01_training_notebook_v8.ipynb
+   ```
+   Or use YOLOv8 CLI:
+   ```bash
+   yolo task=detect mode=train model=yolov8s.pt data={dataset.location}/data.yaml epochs=25 imgsz=640 batch=16 plots=True
+   ```
+
+2. The trained model will be saved to:
+   ```
+   runs/detect/train/weights/best.pt
+   ```
+
+#### 1.6.3 Robustness Evaluation
+1. Run the robustness evaluation notebook:
+   ```bash
+   jupyter notebook notebooks/02_robustness_evaluation.ipynb
+   ```
+
+2. Results will be saved to the `results/robustness/` directory
+
+#### 1.6.4 Fairness Evaluation
+1. Run the fairness evaluation notebook:
+   ```bash
+   jupyter notebook notebooks/03_fairness_evaluation.ipynb
+   ```
+
+2. Results will be saved to the `results/fairness/` directory
+
+### 1.7 Reproducibility Notes
+- All random operations in image transformations use fixed seeds (42)
+- Detection parameters are consistent across evaluations (conf=0.25, iou=0.5)
+- Evaluation uses CPU inference to ensure consistency across environments
+- The full test set (322 images) is used for both evaluations
+
+## 2. Introduction
+
+Modern intelligent transportation systems increasingly rely on AI for real-time traffic management. While these systems promise improved efficiency, their deployment in safety-critical infrastructure demands rigorous trustworthiness evaluation. Our project evaluates an AI-driven traffic signal system that detects vehicles and adapts signal timings in real-time, focusing on two crucial trustworthiness principles:
+
+> **Reliability & Robustness:** How well does our system maintain detection performance when confronted with real-world perturbations like adverse weather, lighting changes, or motion blur?
+
+> **Fairness & Bias:** Does our system detect all types of road users equally well, or does it favor certain vehicle types at the expense of others (particularly vulnerable road users)?
+
+These principles are essential because:
+1. Traffic systems must operate 24/7 in unpredictable conditions
+2. Equitable treatment of all road users is a fundamental safety and ethical requirement
+3. Biased or unstable systems could lead to unfair traffic signal timing or even safety incidents
+
+For this evaluation, we utilize YOLOv8s rather than YOLOv9 (used in our midterm) because:
+- It integrates more seamlessly with established evaluation libraries
+- It provides consistent, reproducible results across environments
+- While slightly less accurate than YOLOv9, its performance characteristics are better documented
+
+We also used a cleaner dataset of 3,649 unaugmented Street-View images (versus the 8,693 augmented images in our midterm) to obtain more realistic assessments of the system's true capabilities without artificial enhancement from data augmentation.
 
 ## 3. Trustworthiness Principles & Evaluation Strategy
 
@@ -570,143 +708,9 @@ The normalized confusion matrix revealed specific misclassification patterns:
    - Cars rarely missed (3% vs background)
    - Correlates with object size and visual distinctiveness
 
-## 6. Technical Implementation & Usage
+## 6. Conclusion
 
-### 6.1 Requirements & Dependencies
-
-To run the evaluation code, the following dependencies are required:
-
-```
-ultralytics==8.2.103
-opencv-python>=4.6.0
-numpy==1.23.5
-matplotlib>=3.5.0
-pandas>=1.3.5
-seaborn>=0.12.0
-tqdm>=4.64.0
-torch>=1.13.0
-torchvision>=0.14.0
-roboflow==1.1.48
-```
-
-These can be installed using:
-```bash
-pip install -r requirements.txt
-```
-
-### 6.2 Repository Structure
-
-```
-Trustness-Evaluation-Traffic-Management-System/
-├── datasets/                      # Dataset directory
-│   └── Street-View-1/             # Our traffic dataset
-│       ├── train/                 # Training images & labels
-│       ├── valid/                 # Validation images & labels
-│       ├── test/                  # Test images & labels
-│       └── data.yaml              # Dataset configuration
-│
-├── notebooks/                     # Jupyter notebooks
-│   ├── 01_training_notebook_v8.ipynb     # Model training
-│   ├── 02_robustness_evaluation.ipynb    # Robustness testing
-│   └── 03_fairness_evaluation.ipynb      # Fairness analysis
-│
-├── results/                       # Evaluation outputs
-│   ├── robustness_results/        # Robustness test results
-│   │   ├── detection_count.png
-│   │   └── metrics.png
-│   ├── training_results/          # Model training results
-│   │   └── results.csv            # Training metrics and logs
-│   │   └── Images, etc            # Contains other validation images
-│   └── trustness_results/         # Fairness analysis results
-│       ├── metrics.png
-│       └── confusion_matrix.png
-│
-├── runs/                          # Training results
-│   └── detect/
-│       └── train/                 # Training outputs
-│           ├── weights/           # Trained model weights
-│           │   ├── best.pt        # Best model weights
-│           │   └── last.pt        # Last epoch weights
-│           ├── results.png        # Training metrics plot
-│           └── val_batch0_pred.jpg  # Validation batch
-│
-├── webapp/                        # Web application for demonstration
-│   ├── flask/                     # Flask web app
-│   ├── streamlit/                 # Streamlit web app
-│   ├── model_weights              # Flask application main script
-│   └── requirements.txt           # Python requirements to run a live app
-│
-├── README.md                      # This documentation
-└── requirements.txt               # Dependencies
-```
-
-### 6.3 Execution Steps
-
-#### 6.3.1 Data Preparation
-1. Download the Street-View dataset:
-   ```python
-   from roboflow import Roboflow
-   rf = Roboflow(api_key="LgoDzohA8qu7hiyPxZtg")
-   project = rf.workspace("sumavatturi").project("street-view-gdogo-a7du4")
-   version = project.version(1)
-   dataset = version.download("yolov9")
-   ```
-
-2. Verify dataset structure:
-   ```
-   datasets/Street-View-1/
-   ├── train/
-   │   ├── images/
-   │   └── labels/
-   ├── valid/
-   │   ├── images/
-   │   └── labels/
-   ├── test/
-   │   ├── images/
-   │   └── labels/
-   └── data.yaml
-   ```
-
-#### 6.3.2 Model Training
-1. Run the training notebook:
-   ```bash
-   jupyter notebook notebooks/01_training_notebook_v8.ipynb
-   ```
-   Or use YOLOv8 CLI:
-   ```bash
-   yolo task=detect mode=train model=yolov8s.pt data={dataset.location}/data.yaml epochs=25 imgsz=640 batch=16 plots=True
-   ```
-
-2. The trained model will be saved to:
-   ```
-   runs/detect/train/weights/best.pt
-   ```
-
-#### 6.3.3 Robustness Evaluation
-1. Run the robustness evaluation notebook:
-   ```bash
-   jupyter notebook notebooks/02_robustness_evaluation.ipynb
-   ```
-
-2. Results will be saved to the `results/robustness/` directory
-
-#### 6.3.4 Fairness Evaluation
-1. Run the fairness evaluation notebook:
-   ```bash
-   jupyter notebook notebooks/03_fairness_evaluation.ipynb
-   ```
-
-2. Results will be saved to the `results/fairness/` directory
-
-### 6.4 Reproducibility Notes
-- All random operations in image transformations use fixed seeds (42)
-- Detection parameters are consistent across evaluations (conf=0.25, iou=0.5)
-- Evaluation uses CPU inference to ensure consistency across environments
-- The full test set (322 images) is used for both evaluations
-
-## 7. Conclusion
-
-### 7.1 Summary of Findings
+### 6.1 Summary of Findings
 
 Our comprehensive trustworthiness evaluation of an AI-powered traffic management system revealed both strengths and critical vulnerabilities:
 
@@ -727,7 +731,7 @@ Our comprehensive trustworthiness evaluation of an AI-powered traffic management
 
 These findings highlight that the system, while promising for deployment in favorable conditions with common vehicle types, requires significant improvements to achieve trustworthy operation across all scenarios and user groups.
 
-### 7.2 Deployment Considerations
+### 6.2 Deployment Considerations
 
 Based on our evaluation, the following deployment considerations should be addressed:
 
@@ -749,7 +753,7 @@ Based on our evaluation, the following deployment considerations should be addre
    - Design fallback traffic management patterns for low-confidence scenarios
    - Consider hybrid approaches combining AI with traditional detection methods
 
-## 8. Acknowledgments & References
+## 7. Acknowledgments & References
 
 ### 8.1 External Code & Libraries
 - **Ultralytics YOLOv8** (ultralytics v8.2.103): For object detection model training and inference
