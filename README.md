@@ -616,13 +616,14 @@ Error analysis reveals distinct patterns:
 Our fairness evaluation revealed significant performance disparities between vehicle classes:
 
 | Vehicle Class | Precision | Recall | F1-Score | Detection Rate | Avg Confidence | Avg IoU | FP/Image | FN/Image |
-|---------------|-----------|--------|----------|----------------|----------------|---------|----------|----------|
-| Car           | 0.95      | 0.93   | 0.94     | 0.94           | 0.87           | 0.75    | 0.24     | 0.42     |
-| Truck         | 0.87      | 0.91   | 0.89     | 0.95           | 0.83           | 0.73    | 0.12     | 0.08     |
-| Bus           | 0.86      | 0.88   | 0.87     | 0.95           | 0.85           | 0.74    | 0.09     | 0.06     |
-| Person        | 0.89      | 0.85   | 0.87     | 0.87           | 0.82           | 0.71    | 0.10     | 0.16     |
-| Motorbike     | 0.79      | 0.85   | 0.82     | 0.87           | 0.78           | 0.70    | 0.16     | 0.09     |
-| Bicycle       | 0.77      | 0.83   | 0.80     | 0.90           | 0.79           | 0.69    | 0.18     | 0.06     |
+|---------------|:---------:|:------:|:--------:|:--------------:|:--------------:|:-------:|:--------:|:--------:|
+| Car           | 0.85      | 0.94   | 0.89     | 0.94           | 0.87           | 0.75    | 0.24     | 0.42     |
+| Truck         | 1.00      | 0.95   | 0.97     | 0.95           | 0.83           | 0.73    | 0.12     | 0.08     |
+| Bus           | 0.74      | 0.95   | 0.83     | 0.95           | 0.85           | 0.74    | 0.09     | 0.06     |
+| Person        | 0.71      | 0.87   | 0.78     | 0.87           | 0.82           | 0.71    | 0.10     | 0.16     |
+| Motorbike     | 0.85      | 0.87   | 0.86     | 0.87           | 0.78           | 0.70    | 0.16     | 0.09     |
+| Bicycle       | 0.88      | 0.91   | 0.89     | 0.91           | 0.79           | 0.69    | 0.18     | 0.06     |
+
 
 ![Fairness Metrics](https://raw.githubusercontent.com/suma-vatturi/Trustness-Evaluation-Traffic-Management-System/refs/heads/main/results/trustness_results/metrics.png)
 *Figure 5: Performance metrics across vehicle classes*
@@ -632,71 +633,71 @@ Our fairness evaluation revealed significant performance disparities between veh
 
 #### 5.2.1 Performance Hierarchy Analysis
 
-The metrics reveal a clear class performance hierarchy:
+The metrics reveal a clear class performance hierarchy based on **F1-score**:
 
-1. **High-Performance Class: Cars (F1=0.94)**
-   - Highest precision (0.95) and strong recall (0.93)
-   - Highest average confidence (0.87) and IoU (0.75)
-   - Cars are the majority class in the dataset (~60% of objects)
-   - Well-represented with consistent visual characteristics
+- **High-Performance Class: Trucks (F1 = 0.97)**
+  - Perfect precision (1.00) and very strong recall (0.95)
+  - Although relatively few examples, large size and distinctive shape make detection easy
 
-2. **Medium-Performance Classes: Large Vehicles & Persons (F1=0.87-0.89)**
-   - Trucks: Good recall (0.91) with decent precision (0.87)
-   - Buses: Balanced performance (P=0.86, R=0.88)
-   - Persons: Strong precision (0.89) with slightly lower recall (0.85)
-   - These classes have distinct shapes and substantial visual features
+- **Strong-Performance Classes: Cars & Bicycles (F1 = 0.89)**
+  - **Cars:** P = 0.85, R = 0.94; high average confidence (0.87) and IoU (0.75)
+  - **Bicycles:** P = 0.88, R = 0.91; good trade-off despite small object size
 
-3. **Lower-Performance Classes: Two-Wheelers (F1=0.80-0.82)**
-   - Motorbikes: Mediocre precision (0.79) with decent recall (0.85)
-   - Bicycles: Lowest precision (0.77) with good recall (0.83)
-   - Smaller visual footprint and more variable appearances
-   - Minority classes in the training dataset
+- **Medium-Performance Classes: Motorbikes & Buses (F1 = 0.86 & 0.83)**
+  - **Motorbikes:** P = 0.85, R = 0.87; moderately small footprint and variable appearance
+  - **Buses:** P = 0.74, R = 0.95; shape is large but lower precision suggests occasional confusion
+
+- **Lower-Performance Class: Persons (F1 = 0.78)**
+  - Precision = 0.71, Recall = 0.87; highest false-negative rate (0.16 FN/image)
+  - Highly variable poses, occlusions, and scale variations make detection hardest
+
+---
 
 #### 5.2.2 Equity Gap Analysis
 
-Several significant performance disparities were identified:
+Several significant performance disparities emerge:
 
-1. **F1-Score Gap**
-   - 14 percentage point gap between best (cars: 0.94) and worst (bicycles: 0.80)
-   - This gap represents approximately a 15% relative performance difference
-   - Consistent pattern where smaller objects have worse performance
+- **F1-Score Gap:**  
+  19 percentage points between best (Trucks: 0.97) and worst (Persons: 0.78).  
+  Reflects a ~20% relative performance drop for vulnerable road users.
 
-2. **Precision Disparity**
-   - 18 percentage point gap in precision (cars: 0.95 vs bicycles: 0.77)
-   - Indicates high false positive rate for two-wheelers
-   - Suggests difficulty distinguishing bicycle features from background elements
+- **Precision Disparity:**  
+  29-point gap (Trucks: 1.00 vs Persons: 0.71).  
+  Indicates persons are far more likely to be mis-classified.
 
-3. **Confidence Inequity**
-   - 8 percentage point gap in average confidence (cars: 0.87 vs bicycles: 0.79)
-   - Model appropriately less confident in lower-performing classes
-   - But confidence gap is smaller than performance gap, suggesting slight overconfidence in weaker classes
+- **Confidence Inequity:**  
+  9-point gap in avg confidence (Cars: 0.87 vs Motorbikes: 0.78).  
+  Model is noticeably less confident on two-wheelers but not proportionally enough to reflect the larger F1 gaps.
 
-4. **Detection Rate Comparison**
-   - Cars detected at 94% rate
-   - Two-wheelers detected at 87-90% rate
-   - Large vehicles (trucks, buses) have highest detection rate (95%)
-   - Detection rate gap is smaller than F1-score gap, suggesting detection thresholds are reasonable
+- **Detection Rate Difference:**  
+  8-point gap (Trucks/Buses: 95% vs Persons/Motorbikes: 87%).  
+  Even though detection thresholds catch most objects, the miss rate still penalizes smaller or occluded classes.
+
+---
 
 #### 5.2.3 Confusion Matrix Insights
 
-The normalized confusion matrix revealed specific misclassification patterns:
+Below is the normalized per-class confusion matrix (row-normalized). Each row sums to 1.0, showing for each ground-truth class the fraction of predictions in each category.
 
-1. **Inter-Class Confusion**
-   - 8% of motorbikes misclassified as bicycles
-   - 5% of bicycles misclassified as motorbikes
-   - 7% of buses misclassified as trucks and 6% of trucks as buses
-   - Visual similarity between related vehicle types causes most errors
+- **Inter-Class Confusion**  
+  - ~49% of bicycles misclassified as cars; ~18% as motorbikes; ~18% as persons  
+  - ~71% of buses correctly classified; ~20% misclassify as cars  
+  - ~70% of cars correctly classified; ~17% misclassify as motorbikes; ~8% as persons  
+  - ~62% of motorbikes correctly classified; ~29% misclassify as cars; ~4% as persons  
+  - ~57% of persons correctly classified; ~36% misclassify as persons; ~4% as motorbikes  
+  - Trucks are perfectly classified (100% on diagonal)
 
-2. **Class Leakage Patterns**
-   - Two-wheelers show highest confusion with each other
-   - Large vehicles (buses/trucks) show mutual confusion
-   - Very little confusion between unrelated categories (e.g., cars vs. persons)
-   - Suggests model correctly groups semantically similar objects
+- **Class Leakage Patterns**  
+  - Two-wheelers (bicycle ↔ motorbike) have the highest mutual confusion  
+  - Large vehicles (bus ↔ truck) show some interchange, but overall remain distinct  
+  - Minimal confusion between semantically distant classes (e.g., cars vs persons)
 
-3. **Background Confusion**
-   - Bicycles most commonly missed entirely (10% vs background)
-   - Cars rarely missed (3% vs background)
-   - Correlates with object size and visual distinctiveness
+- **Background / Miss Rate**  
+  - Classes with lower diagonal values (bicycle, motorbike, person) experience the highest miss rates  
+  - “Bicycle” only 15% correct on the diagonal, indicating 85% of ground-truth bicycles were misclassified or missed  
+  - “Truck” retains 100% on the diagonal, indicating zero miss or misclassification
+
+> **Insight:** The model reliably distinguishes large and majority classes (cars, trucks), but struggles with smaller or visually variable classes—particularly bicycles and motorbikes—highlighting key targets for improving fairness and robustness.
 
 ## 6. Conclusion
 
@@ -712,14 +713,35 @@ Our comprehensive trustworthiness evaluation of an AI-powered traffic management
 - The model shows good confidence calibration, with decreasing confidence scores in more challenging conditions.
 - False negatives (missed detections) increase dramatically in adverse conditions, while false positives remain relatively stable.
 
-**Fairness Evaluation:**
-> The system shows a clear performance hierarchy favoring cars (F1=0.94) over two-wheelers (F1=0.80-0.82).
+**Fairness Evaluation:**  
+> The system shows a clear performance hierarchy favoring **trucks** (F1 = 0.97) and **cars/bicycles** (F1 = 0.89) over **persons** (F1 = 0.78).
 
-- A 14 percentage point F1-score gap exists between the best and worst-performing classes.
-- Precision disparities are more pronounced than recall differences, suggesting higher false positive rates for vulnerable road users.
-- Inter-class confusion occurs primarily between semantically similar categories (buses/trucks, bicycles/motorcycles).
+- **F1-Score Gap:**  
+  19 percentage points between best (truck: 0.97) and worst (person: 0.78).  
+  This represents a ~20% relative performance drop for vulnerable road users.
 
-These findings highlight that the system, while promising for deployment in favorable conditions with common vehicle types, requires significant improvements to achieve trustworthy operation across all scenarios and user groups.
+- **Precision Disparity:**  
+  29 point gap (truck: 1.00 vs person: 0.71), indicating persons are far more likely to be mis-classified.
+
+- **Detection Rate Consistency:**  
+  Trucks and buses at 95%, cars at 94%, versus persons and motorbikes at 87%.  
+  Smaller gap here suggests thresholds catch most objects, but classification quality still varies.
+
+- **Confidence & IoU Inequity:**  
+  Avg confidence ranges from 0.83 (truck) down to 0.78 (motorbike), while avg IoU falls from 0.75 (car) to 0.69 (bicycle).  
+  Indicates model is less certain and less precise on smaller or more variable classes.
+
+- **Error Rates per Image:**  
+  Persons incur the highest FN/image (0.16) and relatively high FP/image (0.10), whereas trucks have FN = 0.08 and FP = 0.12.  
+  Highlights that missed detections dominate errors for vulnerable road users.
+
+- **Inter-Class Confusion:**  
+  Major misclassifications occur between semantically similar pairs:  
+  - **Bicycle ↔ Motorbike**  
+  - **Bus ↔ Truck**  
+
+These findings show the model excels on large, well-represented classes but struggles with smaller or highly variable objects—especially persons and two-wheelers—underscoring the need for targeted improvements to achieve equitable and trustworthy performance across all road user categories.
+
 
 
 ## 7. Acknowledgments & References
