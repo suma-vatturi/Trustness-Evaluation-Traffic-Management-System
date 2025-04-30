@@ -58,7 +58,6 @@
       - [5.2.3 Confusion Matrix Insights](#523-confusion-matrix-insights)
   - [6. Conclusion](#6-conclusion)
     - [6.1 Summary of Findings](#61-summary-of-findings)
-    - [6.2 Deployment Considerations](#62-deployment-considerations)
   - [7. Acknowledgments \& References](#7-acknowledgments--references)
     - [8.1 External Code \& Libraries](#81-external-code--libraries)
     - [8.2 Datasets](#82-datasets)
@@ -92,15 +91,6 @@ Trustness-Evaluation-Traffic-Management-System/
 │   └── trustness_results/         # Fairness analysis results
 │       ├── metrics.png
 │       └── confusion_matrix.png
-│
-├── runs/                          # Training results
-│   └── detect/
-│       └── train/                 # Training outputs
-│           ├── weights/           # Trained model weights
-│           │   ├── best.pt        # Best model weights
-│           │   └── last.pt        # Last epoch weights
-│           ├── results.png        # Training metrics plot
-│           └── val_batch0_pred.jpg  # Validation batch
 │
 ├── webapp/                        # Web application for demonstration
 │   ├── flask/                     # Flask web app
@@ -731,27 +721,6 @@ Our comprehensive trustworthiness evaluation of an AI-powered traffic management
 
 These findings highlight that the system, while promising for deployment in favorable conditions with common vehicle types, requires significant improvements to achieve trustworthy operation across all scenarios and user groups.
 
-### 6.2 Deployment Considerations
-
-Based on our evaluation, the following deployment considerations should be addressed:
-
-1. **Environmental Limitations**
-   - Deploy initially in regions with moderate weather patterns
-   - Implement weather monitoring to adjust system behavior accordingly
-   - Consider seasonal adjustments in areas with extreme winter conditions
-   - Limit reliance on vision-only detection during severe weather events
-
-2. **Traffic Mix Adaptations**
-   - Consider local vehicle distribution when deploying
-   - Areas with high bicycle/motorcycle usage require additional safeguards
-   - Monitor performance across different road user classes in production
-   - Implement specialized detector configurations for vulnerable road user hotspots
-
-3. **Safety Measures**
-   - Establish minimum confidence thresholds for critical decisions
-   - Implement redundant detection systems for vulnerable road users
-   - Design fallback traffic management patterns for low-confidence scenarios
-   - Consider hybrid approaches combining AI with traditional detection methods
 
 ## 7. Acknowledgments & References
 
