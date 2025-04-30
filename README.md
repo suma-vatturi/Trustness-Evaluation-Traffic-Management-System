@@ -39,39 +39,30 @@
       - [5.2.1 Performance Hierarchy Analysis](#521-performance-hierarchy-analysis)
       - [5.2.2 Equity Gap Analysis](#522-equity-gap-analysis)
       - [5.2.3 Confusion Matrix Insights](#523-confusion-matrix-insights)
-  - [6. Implications \& Recommendations](#6-implications--recommendations)
-    - [6.1 Robustness Improvement Strategies](#61-robustness-improvement-strategies)
-      - [6.1.1 Data Augmentation Enhancements](#611-data-augmentation-enhancements)
-      - [6.1.2 Architectural Improvements](#612-architectural-improvements)
-      - [6.1.3 Operational Safeguards](#613-operational-safeguards)
-    - [6.2 Fairness Enhancement Approaches](#62-fairness-enhancement-approaches)
-      - [6.2.1 Dataset Improvements](#621-dataset-improvements)
-      - [6.2.2 Model Adjustments](#622-model-adjustments)
-      - [6.2.3 Post-Processing Strategies](#623-post-processing-strategies)
-  - [7. Technical Implementation \& Usage](#7-technical-implementation--usage)
-    - [7.1 Requirements \& Dependencies](#71-requirements--dependencies)
-    - [7.2 Repository Structure](#72-repository-structure)
-    - [7.3 Execution Steps](#73-execution-steps)
-      - [7.3.1 Data Preparation](#731-data-preparation)
-      - [7.3.2 Model Training](#732-model-training)
-      - [7.3.3 Robustness Evaluation](#733-robustness-evaluation)
-      - [7.3.4 Fairness Evaluation](#734-fairness-evaluation)
-    - [7.4 Reproducibility Notes](#74-reproducibility-notes)
-  - [8. Conclusion \& Future Work](#8-conclusion--future-work)
-    - [8.1 Summary of Findings](#81-summary-of-findings)
-    - [8.2 Deployment Considerations](#82-deployment-considerations)
-    - [8.3 Future Research Directions](#83-future-research-directions)
-  - [9. Acknowledgments \& References](#9-acknowledgments--references)
-    - [9.1 External Code \& Libraries](#91-external-code--libraries)
-    - [9.2 Datasets](#92-datasets)
-    - [9.3 References](#93-references)
+  - [6. Technical Implementation \& Usage](#6-technical-implementation--usage)
+    - [6.1 Requirements \& Dependencies](#61-requirements--dependencies)
+    - [6.2 Repository Structure](#62-repository-structure)
+    - [6.3 Execution Steps](#63-execution-steps)
+      - [6.3.1 Data Preparation](#631-data-preparation)
+      - [6.3.2 Model Training](#632-model-training)
+      - [6.3.3 Robustness Evaluation](#633-robustness-evaluation)
+      - [6.3.4 Fairness Evaluation](#634-fairness-evaluation)
+    - [6.4 Reproducibility Notes](#64-reproducibility-notes)
+  - [7. Conclusion](#7-conclusion)
+    - [7.1 Summary of Findings](#71-summary-of-findings)
+    - [7.2 Deployment Considerations](#72-deployment-considerations)
+  - [8. Acknowledgments \& References](#8-acknowledgments--references)
+    - [8.1 External Code \& Libraries](#81-external-code--libraries)
+    - [8.2 Datasets](#82-datasets)
+    - [8.3 References](#83-references)
 
 ## 1. Introduction
 
 Modern intelligent transportation systems increasingly rely on AI for real-time traffic management. While these systems promise improved efficiency, their deployment in safety-critical infrastructure demands rigorous trustworthiness evaluation. Our project evaluates an AI-driven traffic signal system that detects vehicles and adapts signal timings in real-time, focusing on two crucial trustworthiness principles:
 
-- **Reliability & Robustness:** How well does our system maintain detection performance when confronted with real-world perturbations like adverse weather, lighting changes, or motion blur?
-- **Fairness & Bias:** Does our system detect all types of road users equally well, or does it favor certain vehicle types at the expense of others (particularly vulnerable road users)?
+> **Reliability & Robustness:** How well does our system maintain detection performance when confronted with real-world perturbations like adverse weather, lighting changes, or motion blur?
+
+> **Fairness & Bias:** Does our system detect all types of road users equally well, or does it favor certain vehicle types at the expense of others (particularly vulnerable road users)?
 
 These principles are essential because:
 1. Traffic systems must operate 24/7 in unpredictable conditions
@@ -273,10 +264,10 @@ The dataset containing street view images with annotations for six classes (bicy
 - Validation: 805 images (22%)
 - Test: 322 images (9%)
 
-![Training Results](./results/results.png)
+![Training Results](https://raw.githubusercontent.com/suma-vatturi/Trustness-Evaluation-Traffic-Management-System/refs/heads/main/results/training_results/results.png)
 *Figure 1: Training metrics showing box loss, classification loss, and objectness loss over 25 epochs*
 
-![Validation Batch](./results/val_batch0_pred.jpg)
+![Validation Batch](https://raw.githubusercontent.com/suma-vatturi/Trustness-Evaluation-Traffic-Management-System/refs/heads/main/results/training_results/val_batch0_pred.jpg)
 *Figure 2: Validation batch showing model predictions on various traffic scenes*
 
 The model achieved the following baseline performance:
@@ -426,10 +417,10 @@ Our robustness testing revealed systematic patterns of performance degradation u
 | Snow          | 3.60           | 0.70      | 0.50   | 0.58     | 0.72           | 0.65    |
 | Motion Blur   | 3.34           | 0.68      | 0.45   | 0.54     | 0.70           | 0.60    |
 
-![Robustness Detection Count](robustness_results\detection_count.png)
+![Robustness Detection Count](https://raw.githubusercontent.com/suma-vatturi/Trustness-Evaluation-Traffic-Management-System/refs/heads/main/results/robustness_results/detection_count.png)
 *Figure 3: Average detection counts across different conditions*
 
-![Robustness Metrics](robustness_results\metrics.png)
+![Robustness Metrics](https://raw.githubusercontent.com/suma-vatturi/Trustness-Evaluation-Traffic-Management-System/refs/heads/main/results/robustness_results/metrics.png)
 *Figure 4: Precision, Recall and F1-score across conditions*
 
 #### 5.1.1 Detection Stability Analysis
@@ -440,7 +431,7 @@ The detection count metric reveals three distinct performance tiers:
    - Low Light: 12.04 detections (98% of baseline)
    - Rain: 12.12 detections (98.5% of baseline)
    
-   These conditions cause minimal degradation, suggesting the model has strong generalization to typical lighting variations and rain effects. This resilience is likely due to these conditions preserving most of the critical features needed for detection.
+   > These conditions cause minimal degradation, suggesting the model has strong generalization to typical lighting variations and rain effects. This resilience is likely due to these conditions preserving most of the critical features needed for detection.
 
 2. **Moderate-Impact Conditions (85-95% of baseline)**
    - Bright Light: 11.46 detections (93% of baseline)
@@ -452,7 +443,7 @@ The detection count metric reveals three distinct performance tiers:
    - Snow: 3.60 detections (29% of baseline)
    - Motion Blur: 3.34 detections (27% of baseline)
    
-   These challenging conditions cause catastrophic performance drops, with motion blur being the most problematic. The extreme degradation suggests these perturbations fundamentally alter or obscure the visual features the model relies on for detection.
+   > These challenging conditions cause catastrophic performance drops, with motion blur being the most problematic. The extreme degradation suggests these perturbations fundamentally alter or obscure the visual features the model relies on for detection.
 
 #### 5.1.2 Precision-Recall Trade-offs
 
@@ -505,10 +496,10 @@ Our fairness evaluation revealed significant performance disparities between veh
 | Motorbike     | 0.79      | 0.85   | 0.82     | 0.87           | 0.78           | 0.70    | 0.16     | 0.09     |
 | Bicycle       | 0.77      | 0.83   | 0.80     | 0.90           | 0.79           | 0.69    | 0.18     | 0.06     |
 
-![Fairness Metrics](trustness_results\metrics.png)
+![Fairness Metrics](https://raw.githubusercontent.com/suma-vatturi/Trustness-Evaluation-Traffic-Management-System/refs/heads/main/results/trustness_results/metrics.png)
 *Figure 5: Performance metrics across vehicle classes*
 
-![Class Confusion](trustness_results\confusion_matrix.png)
+![Class Confusion](https://raw.githubusercontent.com/suma-vatturi/Trustness-Evaluation-Traffic-Management-System/refs/heads/main/results/trustness_results/confusion_matrix.png)
 *Figure 6: Normalized confusion matrix showing inter-class misclassifications*
 
 #### 5.2.1 Performance Hierarchy Analysis
@@ -579,102 +570,9 @@ The normalized confusion matrix revealed specific misclassification patterns:
    - Cars rarely missed (3% vs background)
    - Correlates with object size and visual distinctiveness
 
-## 6. Implications & Recommendations
+## 6. Technical Implementation & Usage
 
-### 6.1 Robustness Improvement Strategies
-
-Based on our findings, we recommend the following approaches to enhance system robustness:
-
-#### 6.1.1 Data Augmentation Enhancements
-- **Weather-Specific Training Data**
-  - Add focused augmentation for snow and fog conditions
-  - Include synthetic fog with varying density levels (0.1-0.5 opacity)
-  - Incorporate snow simulation with different coverage patterns
-  - Use real adverse weather images for fine-tuning
-
-- **Motion-Aware Preprocessing**
-  - Implement motion blur augmentation during training
-  - Vary kernel sizes (5-25px) and angles (0°, 45°, 90°, 135°)
-  - Add blur-specific test-time augmentation for moving scenes
-  - Consider deblurring as a preprocessing step
-
-#### 6.1.2 Architectural Improvements
-- **Multi-Condition Ensemble**
-  - Train specialist models for different environmental conditions
-  - Implement condition detection to select appropriate model
-  - Use weighted ensemble predictions for borderline cases
-  - Maintain a robust general model as fallback
-
-- **Feature Enhancement Modules**
-  - Add attention mechanisms to focus on key vehicle features
-  - Implement contrast enhancement preprocessing for low-contrast cases
-  - Consider multi-frame integration for temporal consistency
-  - Explore feature denoising modules for challenging conditions
-
-#### 6.1.3 Operational Safeguards
-- **Adaptive Confidence Thresholds**
-  - Lower thresholds for severe weather (e.g., 0.3 for snow vs. 0.5 for clear)
-  - Implement condition-specific thresholds based on detection statistics
-  - Consider class-specific thresholds for each condition
-
-- **Multi-Sensor Integration**
-  - Supplement vision with radar/lidar in adverse conditions
-  - Implement sensor fusion with appropriate confidence weighting
-  - Maintain independent detection streams for redundancy
-  - Design graceful degradation protocols when vision is compromised
-
-- **Operational Restrictions**
-  - Define minimum confidence requirements for safety-critical decisions
-  - Implement fallback timing patterns during extreme conditions
-  - Consider speed restrictions during detection uncertainty
-  - Provide clear system status indications to operators
-
-### 6.2 Fairness Enhancement Approaches
-
-To address the identified fairness gaps, we recommend:
-
-#### 6.2.1 Dataset Improvements
-- **Class Balancing Strategies**
-  - Add 35-40% more bicycle and motorcycle training examples
-  - Use oversampling for minority classes with copy augmentation
-  - Apply targeted data collection for underrepresented classes
-  - Ensure diverse views and partial occlusions for vulnerable road users
-
-- **Focused Augmentation**
-  - Apply stronger augmentation to majority classes
-  - Use conservative augmentation for minority classes
-  - Implement class-specific augmentation policies
-  - Create synthetic examples of rare class variations
-
-#### 6.2.2 Model Adjustments
-- **Loss Function Modifications**
-  - Implement class-weighted loss (e.g., 1.5x weight for bicycles/motorcycles)
-  - Use focal loss to emphasize hard examples
-  - Add IoU-aware classification loss
-  - Consider auxiliary tasks that benefit smaller objects
-
-- **Architectural Enhancements**
-  - Add feature pyramid levels for better small object detection
-  - Implement class-specific detection heads
-  - Increase resolution for vulnerable road user detection
-  - Consider two-stage detection for smaller objects
-
-#### 6.2.3 Post-Processing Strategies
-- **Adaptive Thresholding**
-  - Lower confidence thresholds for vulnerable road users
-  - Implement class-dependent NMS parameters
-  - Apply more conservative IoU thresholds for smaller objects
-  - Consider soft-NMS for closely positioned road users
-
-- **Specialized Detection Paths**
-  - Implement a secondary detector focused on two-wheelers
-  - Create an ensemble of general detector + vulnerability-focused detector
-  - Use test-time augmentation specifically for minority classes
-  - Consider upsampling images for better small object detection
-
-## 7. Technical Implementation & Usage
-
-### 7.1 Requirements & Dependencies
+### 6.1 Requirements & Dependencies
 
 To run the evaluation code, the following dependencies are required:
 
@@ -696,7 +594,7 @@ These can be installed using:
 pip install -r requirements.txt
 ```
 
-### 7.2 Repository Structure
+### 6.2 Repository Structure
 
 ```
 Trustness-Evaluation-Traffic-Management-System/
@@ -742,9 +640,9 @@ Trustness-Evaluation-Traffic-Management-System/
 └── requirements.txt               # Dependencies
 ```
 
-### 7.3 Execution Steps
+### 6.3 Execution Steps
 
-#### 7.3.1 Data Preparation
+#### 6.3.1 Data Preparation
 1. Download the Street-View dataset:
    ```python
    from roboflow import Roboflow
@@ -769,7 +667,7 @@ Trustness-Evaluation-Traffic-Management-System/
    └── data.yaml
    ```
 
-#### 7.3.2 Model Training
+#### 6.3.2 Model Training
 1. Run the training notebook:
    ```bash
    jupyter notebook notebooks/01_training_notebook_v8.ipynb
@@ -784,7 +682,7 @@ Trustness-Evaluation-Traffic-Management-System/
    runs/detect/train/weights/best.pt
    ```
 
-#### 7.3.3 Robustness Evaluation
+#### 6.3.3 Robustness Evaluation
 1. Run the robustness evaluation notebook:
    ```bash
    jupyter notebook notebooks/02_robustness_evaluation.ipynb
@@ -792,7 +690,7 @@ Trustness-Evaluation-Traffic-Management-System/
 
 2. Results will be saved to the `results/robustness/` directory
 
-#### 7.3.4 Fairness Evaluation
+#### 6.3.4 Fairness Evaluation
 1. Run the fairness evaluation notebook:
    ```bash
    jupyter notebook notebooks/03_fairness_evaluation.ipynb
@@ -800,33 +698,36 @@ Trustness-Evaluation-Traffic-Management-System/
 
 2. Results will be saved to the `results/fairness/` directory
 
-### 7.4 Reproducibility Notes
+### 6.4 Reproducibility Notes
 - All random operations in image transformations use fixed seeds (42)
 - Detection parameters are consistent across evaluations (conf=0.25, iou=0.5)
 - Evaluation uses CPU inference to ensure consistency across environments
 - The full test set (322 images) is used for both evaluations
 
-## 8. Conclusion & Future Work
+## 7. Conclusion
 
-### 8.1 Summary of Findings
+### 7.1 Summary of Findings
 
 Our comprehensive trustworthiness evaluation of an AI-powered traffic management system revealed both strengths and critical vulnerabilities:
 
 **Robustness Assessment:**
-- The system demonstrates strong resilience to common environmental variations like low light and rain, maintaining over 98% of baseline performance.
-- However, it suffers catastrophic degradation in challenging conditions like snow (71% detection drop) and motion blur (73% detection drop).
+> The system demonstrates strong resilience to common environmental variations like low light and rain, maintaining over 98% of baseline performance.
+
+> However, it suffers catastrophic degradation in challenging conditions like snow (71% detection drop) and motion blur (73% detection drop).
+
 - The model shows good confidence calibration, with decreasing confidence scores in more challenging conditions.
 - False negatives (missed detections) increase dramatically in adverse conditions, while false positives remain relatively stable.
 
 **Fairness Evaluation:**
-- The system shows a clear performance hierarchy favoring cars (F1=0.94) over two-wheelers (F1=0.80-0.82).
+> The system shows a clear performance hierarchy favoring cars (F1=0.94) over two-wheelers (F1=0.80-0.82).
+
 - A 14 percentage point F1-score gap exists between the best and worst-performing classes.
 - Precision disparities are more pronounced than recall differences, suggesting higher false positive rates for vulnerable road users.
 - Inter-class confusion occurs primarily between semantically similar categories (buses/trucks, bicycles/motorcycles).
 
 These findings highlight that the system, while promising for deployment in favorable conditions with common vehicle types, requires significant improvements to achieve trustworthy operation across all scenarios and user groups.
 
-### 8.2 Deployment Considerations
+### 7.2 Deployment Considerations
 
 Based on our evaluation, the following deployment considerations should be addressed:
 
@@ -848,41 +749,19 @@ Based on our evaluation, the following deployment considerations should be addre
    - Design fallback traffic management patterns for low-confidence scenarios
    - Consider hybrid approaches combining AI with traditional detection methods
 
-### 8.3 Future Research Directions
+## 8. Acknowledgments & References
 
-Several promising directions emerged from our evaluation:
-
-1. **Enhanced Robustness Techniques**
-   - Develop weather-aware feature extraction modules
-   - Explore attention mechanisms that prioritize vehicle-specific features
-   - Research deblurring techniques specifically for traffic scenarios
-   - Investigate self-supervised pre-training for weather invariance
-
-2. **Fairness-Aware Training**
-   - Develop automated class-balancing approaches beyond simple weighting
-   - Research techniques to emphasize minority class features during training
-   - Explore knowledge distillation from specialized to general models
-   - Investigate bias-aware loss functions that dynamically adjust during training
-
-3. **Multi-Modal Integration**
-   - Evaluate fusion approaches combining cameras with radar/lidar
-   - Research cross-modal knowledge transfer for adverse conditions
-   - Develop adaptive sensor weighting based on environmental conditions
-   - Explore temporal integration methods for more stable predictions
-
-## 9. Acknowledgments & References
-
-### 9.1 External Code & Libraries
+### 8.1 External Code & Libraries
 - **Ultralytics YOLOv8** (ultralytics v8.2.103): For object detection model training and inference
 - **OpenCV** (opencv-python): For image transformations and processing
 - **Roboflow**: For dataset management and distribution
 - Image transformation code adapted from: "Evaluating Robustness of Deep Image Classifiers" (Wang et al., 2022)
 
-### 9.2 Datasets
+### 8.2 Datasets
 - Street-View Dataset: Collected and annotated for this project by our team
 - Annotations created using Roboflow annotation tools
 
-### 9.3 References
+### 8.3 References
 1. Wang, X., et al. (2022). "Evaluating Robustness of Deep Image Classifiers using Transformation-based Ensembles." Proceedings of CVPR 2022.
 2. Jocher, G., et al. (2023). "Ultralytics YOLOv8." https://github.com/ultralytics/ultralytics.
 3. Hendrycks, D., & Dietterich, T. (2019). "Benchmarking neural network robustness to common corruptions and perturbations." ICLR 2019.
